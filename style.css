@@ -1,17 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
 
-body {
-    /* background-color: #ff6700; */
-    background-color: white;
+@font-face {
+    font-family: Delicious;
+    src: url('Delicious-Roman.otf');
 }
 
-h1 {
-    font-family: 'Roboto Slab';
+@font-face {
+    font-family: Delicious;
+    font-weight: bold;
+    src: url('Delicious-Bold.otf');
+}
+
+body {
+    font-family: 'Helvetica';
+    background-color: white;
 }
 
 #container {
     margin: auto;
-    margin-top: 20px;
+    margin-top: 5%;
     display: grid;
     height: 710px;
     width: 420px;
@@ -38,7 +45,7 @@ h1 {
 #input-tab {
     color: white;
     font-size: 400%;
-    font-family: 'Roboto Slab';
+    font-family: 'Helvetica';
     text-align: right;
     padding-top: 120px;
     padding-right: 30px;
@@ -48,7 +55,7 @@ h1 {
     background-color: #383838;
     color: white;
     font-size: 250%;
-    font-family: 'Roboto Slab';
+    font-family: 'Helvetica';
 }
 
 .num-item:hover {
@@ -60,7 +67,7 @@ h1 {
     background-color: #ff6700;
     color: white;
     font-size: 250%;
-    font-family: 'Roboto Slab';
+    font-family: 'Helvetica';
 }
 
 .op-item:hover {
@@ -73,7 +80,7 @@ h1 {
     background-color: lightgrey;
     color: black;
     font-size: 250%;
-    font-family: 'Roboto Slab';
+    font-family: 'Helvetica';
 }
 
 .clear-item:hover {
