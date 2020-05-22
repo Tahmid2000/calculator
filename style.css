@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
 
 body {
-    background-color: #ff6700;
+    /* background-color: #ff6700; */
+    background-color: white;
 }
 
 h1 {
@@ -12,10 +13,10 @@ h1 {
     margin: auto;
     margin-top: 20px;
     display: grid;
-    height: 700px;
-    width: 400px;
+    height: 710px;
+    width: 420px;
     border: 2px solid black;
-    background-color: #383838;
+    background-color: #101010;
     border-radius: 10px;
     -webkit-box-shadow: 0px 11px 137px -9px rgba(0, 0, 0, 0.9);
     -moz-box-shadow: 0px 11px 137px -9px rgba(0, 0, 0, 0.9);
@@ -25,6 +26,7 @@ h1 {
 #main-grid {
     margin: auto;
     margin-top: 200px;
+    margin-left: 10px;
     display: grid;
     height: 500px;
     width: 400px;
@@ -35,26 +37,54 @@ h1 {
 
 #input-tab {
     color: white;
-    font-size: 300%;
+    font-size: 400%;
     font-family: 'Roboto Slab';
     text-align: right;
-    padding-top: 145px;
+    padding-top: 120px;
+    padding-right: 30px;
 }
 
 .num-item {
-    background-color: #101010;
+    background-color: #383838;
     color: white;
     font-size: 250%;
     font-family: 'Roboto Slab';
+}
+
+.num-item:hover {
+    background-color: grey;
+    cursor: pointer;
+}
+
+.op-item {
+    background-color: #ff6700;
+    color: white;
+    font-size: 250%;
+    font-family: 'Roboto Slab';
+}
+
+.op-item:hover {
+    background-color: white;
+    color: #ff6700;
+    cursor: pointer;
+}
+
+.clear-item {
+    background-color: lightgrey;
+    color: black;
+    font-size: 250%;
+    font-family: 'Roboto Slab';
+}
+
+.clear-item:hover {
+    background-color: whitesmoke;
+    color: black;
+    cursor: pointer;
 }
 
 button {
     padding: 0;
     border: none;
     background: none;
-}
-
-button:hover {
-    background-color: grey;
-    cursor: pointer;
+    border-radius: 50px;
 }
