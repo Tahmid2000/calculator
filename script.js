@@ -1,11 +1,3 @@
-function add(a, b) {
-    return a + b;
-}
-
-function subtract(a, b) {
-    return a - b;
-}
-
 function sum(arr) {
     const sum = arr.reduce((total, ar) => {
         return total + ar;
@@ -57,13 +49,17 @@ function operate(nums, op) {
     return 'Incorrect operator.';
 }
 
+function pemdas() {
+
+}
+
 var container = document.getElementById('container');
 var container2 = document.getElementById('main-grid');
 var container3 = document.getElementById('right-grid');
 var screen = document.getElementById('input-tab');
 
 function createMainGrid() {
-    var firstRow = ['AC', '+/-', "√", "^", 7, 8, 9, "÷", 4, 5, 6, "x", 1, 2, 3, "-", 0, ".", "=", "+"];
+    var firstRow = ['AC', "xʸ", "C", "÷", 7, 8, 9, "x", 4, 5, 6, "-", 1, 2, 3, "+", 0, ".", , '+/-', "="];
     firstRow.forEach(element => {
         let newDiv = document.createElement("button");
         newDiv.className = "num-item";
@@ -73,7 +69,7 @@ function createMainGrid() {
     });
 }
 
-function generate() {
+function generateMouse() {
     const buttons = document.querySelectorAll('.num-item');
     var count = 0;
     var nums = [];
@@ -82,8 +78,7 @@ function generate() {
     var signcount = 0;
     screen.innerHTML = '0'
     buttons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            container2.style.marginBottom = "0px";
+        button.addEventListener('click', () => {
             if (button.id == 'AC') {
                 screen.innerHTML = "0";
                 count = 0;
@@ -99,14 +94,23 @@ function generate() {
                     screen.innerHTML = screen.innerHTML.substring(1, screen.innerHTML.length);
                 count++;
 
+            } else if (button.id == 'C') {
+                if (count != 0)
+                    count--;
+                if (screen.innerHTML != '0')
+                    screen.innerHTML = screen.innerHTML.substring(0, screen.innerHTML.length - 1);
+                if (count == 0)
+                    screen.innerHTML = "0";
+
             } else if (button.id == '=') {
                 var temp = "";
                 for (let i = 0; i < all.length; i++) {
                     temp += all[i];
                 }
                 nums.push(parseInt(temp));
-                screen.innerHTML = operate(nums, ops[0]);
-                count = 0;
+                var result = "" + operate(nums, ops[0]);
+                screen.innerHTML = result;
+                count = screen.innerHTML.length;
                 nums = [];
                 ops = [];
                 all = [];
@@ -129,6 +133,6 @@ function generate() {
         });
     });
 }
-
+//pemdas function, different collor buttons, second input(for result and after operator number), add keyboard, functions, make like apple, colored background
 createMainGrid();
-generate();
+generateMouse();

@@ -24,9 +24,9 @@ h1 {
 
 #main-grid {
     margin: auto;
-    margin-top: 125px;
+    margin-top: 200px;
     display: grid;
-    height: 575px;
+    height: 500px;
     width: 400px;
     background-color: #101010;
     grid-template-columns: repeat(4, 1fr);
@@ -38,7 +38,7 @@ h1 {
     font-size: 300%;
     font-family: 'Roboto Slab';
     text-align: right;
-    padding-top: 70px;
+    padding-top: 145px;
 }
 
 .num-item {
