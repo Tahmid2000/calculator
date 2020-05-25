@@ -12,7 +12,7 @@
 }
 
 body {
-    font-family: 'Helvetica';
+    font-family: 'Helvetica Neue';
     background-color: white;
 }
 
@@ -42,20 +42,39 @@ body {
     position: fixed;
 }
 
+#main-grid:hover {
+    cursor: pointer;
+}
+
 #input-tab {
+
     color: white;
     font-size: 400%;
-    font-family: 'Helvetica';
+    font-family: 'Helvetica Neue';
     text-align: right;
-    padding-top: 120px;
-    padding-right: 30px;
+    /*  padding-top: 120px;
+    padding-right: 30px; */
+    height: 100px;
+    margin-bottom: 500px;
+    margin-right: 35px;
+}
+
+#other-tab {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 135%;
+    font-family: 'Helvetica Neue';
+    text-align: right;
+    padding-top: 90px;
+    padding-right: 40px;
+    height: 30px;
+    text-align: right;
 }
 
 .num-item {
     background-color: #383838;
     color: white;
     font-size: 250%;
-    font-family: 'Helvetica';
+    font-family: 'Helvetica Neue';
 }
 
 .num-item:hover {
@@ -67,7 +86,7 @@ body {
     background-color: #ff6700;
     color: white;
     font-size: 250%;
-    font-family: 'Helvetica';
+    font-family: 'Helvetica Neue';
 }
 
 .op-item:hover {
@@ -80,7 +99,7 @@ body {
     background-color: lightgrey;
     color: black;
     font-size: 250%;
-    font-family: 'Helvetica';
+    font-family: 'Helvetica Neue';
 }
 
 .clear-item:hover {
