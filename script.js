@@ -3,11 +3,10 @@ var container2 = document.getElementById("main-grid");
 var container3 = document.getElementById("right-grid");
 var screen = document.getElementById("input-tab");
 var screen2 = document.getElementById("other-tab");
-const charList = "+-*/^=.0123456789";
+const charList = "+-*/^=.0123456789e";
 const ops = "+-*/^";
 var result = "";
-var count = 0;
-var exps = [];
+
 function createMainGrid() {
   var firstRow = [
     "AC",
@@ -62,7 +61,6 @@ function createMainGrid() {
 
 function generateMouse() {
   const buttons = document.querySelectorAll(".num-item, .clear-item, .op-item");
-  var signcount = 0;
   screen.innerHTML = "0";
   buttons.forEach(button => {
     button.addEventListener("click", () => {
@@ -71,32 +69,32 @@ function generateMouse() {
         //all clear
         screen.innerHTML = "0";
         screen2.innerHTML = "";
-        count = 0;
         result = "";
-        signcount = 0;
       } else if (button.id === "+/-") {
         //positive/negative
-        signcount++;
-        if (signcount % 2 == 1) {
-          result += "-" + screen.innerHTML;
-          screen.innerHTML = "-" + screen.innerHTML;
-          count++;
-        } else {
-          screen.innerHTML = screen.innerHTML.substring(
-            1,
-            screen.innerHTML.length
-          );
-          result = result.substring(1, result.length);
-          count--;
+        if (screen.innerHTML !== "0") {
+          if (screen.innerHTML < 0) {
+            result = result.substring(
+              0,
+              result.length - screen.innerHTML.length - 2
+            );
+            screen.innerHTML *= -1;
+            result += " " + screen.innerHTML;
+          } else {
+            result = result.substring(
+              0,
+              result.length - screen.innerHTML.length
+            );
+            screen.innerHTML *= -1;
+            result += " (" + screen.innerHTML + ")";
+          }
         }
       } else if (button.id === "C") {
         //backspace
-        if (count != 0) count--;
-        if (screen.innerHTML === "Infinity") {
-          count = 0;
-          screen.innerHTML = "0";
-        }
-        if (count == 0) {
+        if (
+          screen.innerHTML === "Infinity" ||
+          (screen.innerHTML == "" && screen2.innerHTML.indexOf("=") == -1)
+        ) {
           screen.innerHTML = "0";
           result = screen2.innerHTML;
         } else if (screen.innerHTML != "0") {
@@ -105,19 +103,24 @@ function generateMouse() {
             screen.innerHTML.length - 1
           );
           result = result.substring(0, result.length - 1);
+          if (screen.innerHTML == "") {
+            screen.innerHTML = "0";
+            if (screen2.innerHTML.indexOf("=") != -1) {
+              result = "";
+              screen2.innerHTML = "";
+            }
+          }
         }
       } else if (button.id === "=") {
         //equal
         if (screen.innerHTML === "0") result += 0;
         screen2.innerHTML += screen.innerHTML + " = ";
         var temp = "" + eval(result);
-
         if (temp.length >= 10) {
           temp = temp.substring(0, 10);
         }
         screen.innerHTML = temp;
         result = temp;
-        count = screen.innerHTML.length;
       } else {
         //any other key
         if (screen.innerHTML === "0" || screen.innerHTML === "Infinity")
@@ -136,38 +139,31 @@ function generateMouse() {
               screen2.innerHTML += screen.innerHTML + " " + "^" + " ";
             else screen2.innerHTML += screen.innerHTML + " " + button.id + " ";
             screen.innerHTML = "0";
-            count = -1;
           } else screen.innerHTML = "0";
         } else if (screen.innerHTML.length < 10) {
           result += button.id;
           screen.innerHTML += button.id;
         }
-        count++;
       }
     });
   });
 }
 
 function generateKeys() {
-  var signcount = 0;
   screen.innerHTML = "0";
   document.addEventListener("keydown", e => {
     if (result.charAt(0) === "0") result = result.substring(1);
     if (e.key === "a") {
       //all clear
       screen.innerHTML = "0";
-      count = 0;
       result = "";
-      signcount = 0;
       screen2.innerHTML = "";
     } else if (e.key === "Backspace" || e.key == "c") {
       //backspace
-      if (count != 0) count--;
-      if (screen.innerHTML === "Infinity") {
-        count = 0;
-        screen.innerHTML = "0";
-      }
-      if (count == 0) {
+      if (
+        screen.innerHTML === "Infinity" ||
+        (screen.innerHTML == "" && screen2.innerHTML.indexOf("=") == -1)
+      ) {
         screen.innerHTML = "0";
         result = screen2.innerHTML;
       } else if (screen.innerHTML != "0") {
@@ -176,18 +172,24 @@ function generateKeys() {
           screen.innerHTML.length - 1
         );
         result = result.substring(0, result.length - 1);
+        if (screen.innerHTML == "") {
+          screen.innerHTML = "0";
+          if (screen2.innerHTML.indexOf("=") != -1) {
+            result = "";
+            screen2.innerHTML = "";
+          }
+        }
       }
     } else if (e.key === "=" || e.key === "Enter") {
       //equal
       if (screen.innerHTML === "0") result += 0;
       screen2.innerHTML += screen.innerHTML + " = ";
-      var temp = "" + eval(result);
-      if (temp.length >= 10) {
-        temp = temp.substring(0, 10);
+      var temp = eval(result);
+      if (temp > 9999999999 || temp < -9999999999) {
+        temp = temp.toExponential(4);
       }
-      screen.innerHTML = temp;
-      result = temp;
-      count = screen.innerHTML.length;
+      screen.innerHTML = "" + temp;
+      result = "" + temp;
     } else if (charList.indexOf(e.key) != -1) {
       //any other key
       if (screen.innerHTML === "0" || screen.innerHTML === "Infinity")
@@ -204,17 +206,15 @@ function generateKeys() {
           else if (e.key === "/") screen2.innerHTML += screen.innerHTML + " ÷ ";
           else screen2.innerHTML += screen.innerHTML + " " + e.key + " ";
           screen.innerHTML = "0";
-          count = -1;
         } else screen.innerHTML = "0";
       } else if (screen.innerHTML.length < 10) {
         result += e.key;
         screen.innerHTML += e.key;
       }
-      count++;
     }
   });
 }
-//big numbers(think about nums >= 9999999999), fix second input overflow, fix negative for keyboard, colored background,add button highlights for keyboard,
+//fix second input overflow, colored background, add button highlights for keyboard
 createMainGrid();
 generateMouse();
 generateKeys();
