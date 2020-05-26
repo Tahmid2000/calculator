@@ -42,7 +42,8 @@ body {
     width: 400px;
     background-color: #101010;
     grid-template-columns: repeat(4, 1fr);
-    position: fixed;
+    position: relative;
+    position: absolute;
 }
 
 #main-grid:hover {
