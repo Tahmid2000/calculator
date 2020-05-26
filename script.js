@@ -65,63 +65,11 @@ function generateMouse() {
   buttons.forEach(button => {
     button.addEventListener("click", () => {
       if (result.charAt(0) === "0") result = result.substring(1);
-      if (button.id === "AC") {
-        //all clear
-        screen.innerHTML = "0";
-        screen2.innerHTML = "";
-        result = "";
-      } else if (button.id === "+/-") {
-        //positive/negative
-        if (screen.innerHTML !== "0") {
-          if (screen.innerHTML < 0) {
-            result = result.substring(
-              0,
-              result.length - screen.innerHTML.length - 2
-            );
-            screen.innerHTML *= -1;
-            result += " " + screen.innerHTML;
-          } else {
-            result = result.substring(
-              0,
-              result.length - screen.innerHTML.length
-            );
-            screen.innerHTML *= -1;
-            result += " (" + screen.innerHTML + ")";
-          }
-        }
-      } else if (button.id === "C") {
-        //backspace
-        if (
-          screen.innerHTML === "Infinity" ||
-          (screen.innerHTML == "" && screen2.innerHTML.indexOf("=") == -1)
-        ) {
-          screen.innerHTML = "0";
-          result = screen2.innerHTML;
-        } else if (screen.innerHTML != "0") {
-          screen.innerHTML = screen.innerHTML.substring(
-            0,
-            screen.innerHTML.length - 1
-          );
-          result = result.substring(0, result.length - 1);
-          if (screen.innerHTML == "") {
-            screen.innerHTML = "0";
-            if (screen2.innerHTML.indexOf("=") != -1) {
-              result = "";
-              screen2.innerHTML = "";
-            }
-          }
-        }
-      } else if (button.id === "=") {
-        //equal
-        if (screen.innerHTML === "0") result += 0;
-        screen2.innerHTML += screen.innerHTML + " = ";
-        var temp = "" + eval(result);
-        if (temp.length >= 10) {
-          temp = temp.substring(0, 10);
-        }
-        screen.innerHTML = temp;
-        result = temp;
-      } else {
+      if (button.id === "AC") allClear(); //all clear
+      else if (button.id === "+/-") signs() //pos/negt
+      else if (button.id === "C") backspace(); //backspace
+      else if (button.id === "=") equal(); //equals
+      else {
         //any other key
         if (screen.innerHTML === "0" || screen.innerHTML === "Infinity")
           screen.innerHTML = "";
@@ -145,52 +93,19 @@ function generateMouse() {
           screen.innerHTML += button.id;
         }
       }
+      checkOverflow();
     });
   });
 }
 
 function generateKeys() {
   screen.innerHTML = "0";
-  document.addEventListener("keydown", e => {
+  document.addEventListener("keydown", (e) => {
     if (result.charAt(0) === "0") result = result.substring(1);
-    if (e.key === "a") {
-      //all clear
-      screen.innerHTML = "0";
-      result = "";
-      screen2.innerHTML = "";
-    } else if (e.key === "Backspace" || e.key == "c") {
-      //backspace
-      if (
-        screen.innerHTML === "Infinity" ||
-        (screen.innerHTML == "" && screen2.innerHTML.indexOf("=") == -1)
-      ) {
-        screen.innerHTML = "0";
-        result = screen2.innerHTML;
-      } else if (screen.innerHTML != "0") {
-        screen.innerHTML = screen.innerHTML.substring(
-          0,
-          screen.innerHTML.length - 1
-        );
-        result = result.substring(0, result.length - 1);
-        if (screen.innerHTML == "") {
-          screen.innerHTML = "0";
-          if (screen2.innerHTML.indexOf("=") != -1) {
-            result = "";
-            screen2.innerHTML = "";
-          }
-        }
-      }
-    } else if (e.key === "=" || e.key === "Enter") {
-      //equal
-      if (screen.innerHTML === "0") result += 0;
-      screen2.innerHTML += screen.innerHTML + " = ";
-      var temp = eval(result);
-      if (temp > 9999999999 || temp < -9999999999) {
-        temp = temp.toExponential(4);
-      }
-      screen.innerHTML = "" + temp;
-      result = "" + temp;
-    } else if (charList.indexOf(e.key) != -1) {
+    if (e.key === "a") allClear(); //all clear
+    else if (e.key === "Backspace") backspace(); //backspace
+    else if (e.key === "=" || e.key === "Enter") equal(); // equals
+    else if (charList.indexOf(e.key) != -1) {
       //any other key
       if (screen.innerHTML === "0" || screen.innerHTML === "Infinity")
         screen.innerHTML = "";
@@ -212,9 +127,99 @@ function generateKeys() {
         screen.innerHTML += e.key;
       }
     }
+    checkOverflow();
   });
 }
-//fix second input overflow, colored background, add button highlights for keyboard
+
+function allClear() {
+  screen.innerHTML = "0";
+  result = "";
+  screen2.innerHTML = "";
+}
+
+function backspace() {
+  if (
+    screen.innerHTML === "Infinity" ||
+    (screen.innerHTML == "" && screen2.innerHTML.indexOf("=") == -1)
+  ) {
+    screen.innerHTML = "0";
+    result = screen2.innerHTML;
+  } else if (screen.innerHTML != "0") {
+    screen.innerHTML = screen.innerHTML.substring(
+      0,
+      screen.innerHTML.length - 1
+    );
+    result = result.substring(0, result.length - 1);
+    if (screen.innerHTML == "") {
+      screen.innerHTML = "0";
+      if (screen2.innerHTML.indexOf("=") != -1) {
+        result = "";
+        screen2.innerHTML = "";
+      }
+    }
+  }
+}
+
+function equal() {
+  if (screen.innerHTML === "0") result += 0;
+  screen2.innerHTML += screen.innerHTML + " = ";
+  //checkOverflow();
+  var temp = eval(result);
+  if (temp > 9999999999 || temp < -9999999999 || (temp > 0 && temp < .000000001)) {
+    temp = temp.toExponential(4);
+  } else if (("" + temp).length > 10) {
+    temp = ("" + temp).substring(0, 10);
+  }
+  screen.innerHTML = "" + temp;
+  result = "" + temp;
+}
+
+function signs() {
+  if (screen.innerHTML !== "0") {
+    if (screen.innerHTML < 0) {
+      result = result.substring(
+        0,
+        result.length - screen.innerHTML.length - 2
+      );
+      screen.innerHTML *= -1;
+      result += " " + screen.innerHTML;
+    } else {
+      result = result.substring(
+        0,
+        result.length - screen.innerHTML.length
+      );
+      screen.innerHTML *= -1;
+      result += " (" + screen.innerHTML + ")";
+    }
+  }
+}
+
+function checkOverflow() {
+  let totLength = screen2.innerHTML.replace(/\s+/g, '').length;
+  if (totLength > 19) {
+    if (totLength <= 38) {
+      screen2.style.paddingTop = '70px';
+      screen.style.marginBottom = '470px';
+    } else if (totLength > 38 && totLength < 38 + 19) {
+      screen2.style.paddingTop = '50px';
+      screen.style.marginBottom = '450px';
+    } else if (totLength >= 38 + 19 && totLength < 76) {
+      screen2.style.paddingTop = '30px';
+      screen.style.marginBottom = '430px';
+    } else {
+      screen2.style.paddingTop = '90px';
+      screen.style.marginBottom = '500px';
+      screen2.innerHTML = "";
+      result = "";
+      screen.innerHTML = "0";
+    }
+  } else {
+    screen2.style.paddingTop = '90px';
+    screen.style.marginBottom = '500px';
+  }
+}
+
+//throw error, colored background, add button highlights for keyboard
 createMainGrid();
 generateMouse();
 generateKeys();
