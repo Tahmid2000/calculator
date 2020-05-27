@@ -65,10 +65,11 @@ function generateMouse() {
   buttons.forEach(button => {
     button.addEventListener("click", () => {
       if (result.charAt(0) === "0") result = result.substring(1);
-      if (button.id === "AC") allClear(); //all clear
-      else if (button.id === "+/-") signs() //pos/negt
-      else if (button.id === "C") backspace(); //backspace
-      else if (button.id === "=") equal(); //equals
+      if (screen.innerHTML == "Infinity") allClear();
+      if (button.id === "AC") allClear();
+      else if (button.id === "+/-") signs();
+      else if (button.id === "C") backspace();
+      else if (button.id === "=") equal();
       else {
         //any other key
         if (screen.innerHTML === "0" || screen.innerHTML === "Infinity")
@@ -88,6 +89,12 @@ function generateMouse() {
             else screen2.innerHTML += screen.innerHTML + " " + button.id + " ";
             screen.innerHTML = "0";
           } else screen.innerHTML = "0";
+        } else if (screen2.innerHTML.indexOf("=") != -1) {
+          screen.innerHTML = "";
+          screen2.innerHTML = "";
+          result = "";
+          result = button.id;
+          screen.innerHTML += button.id;
         } else if (screen.innerHTML.length < 10) {
           result += button.id;
           screen.innerHTML += button.id;
@@ -100,11 +107,12 @@ function generateMouse() {
 
 function generateKeys() {
   screen.innerHTML = "0";
-  document.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", e => {
     if (result.charAt(0) === "0") result = result.substring(1);
-    if (e.key === "a") allClear(); //all clear
-    else if (e.key === "Backspace") backspace(); //backspace
-    else if (e.key === "=" || e.key === "Enter") equal(); // equals
+    if (screen.innerHTML == "Infinity") allClear();
+    if (e.key === "a") allClear();
+    else if (e.key === "Backspace") backspace();
+    else if (e.key === "=" || e.key === "Enter") equal();
     else if (charList.indexOf(e.key) != -1) {
       //any other key
       if (screen.innerHTML === "0" || screen.innerHTML === "Infinity")
@@ -122,6 +130,12 @@ function generateKeys() {
           else screen2.innerHTML += screen.innerHTML + " " + e.key + " ";
           screen.innerHTML = "0";
         } else screen.innerHTML = "0";
+      } else if (screen2.innerHTML.indexOf("=") != -1) {
+        screen.innerHTML = "";
+        screen2.innerHTML = "";
+        result = "";
+        result = e.key;
+        screen.innerHTML += e.key;
       } else if (screen.innerHTML.length < 10) {
         result += e.key;
         screen.innerHTML += e.key;
@@ -165,7 +179,12 @@ function equal() {
   screen2.innerHTML += screen.innerHTML + " = ";
   //checkOverflow();
   var temp = eval(result);
-  if (temp > 9999999999 || temp < -9999999999 || (temp > 0 && temp < .000000001)) {
+  if (
+    temp > 9999999999 ||
+    temp < -9999999999 ||
+    (temp > 0 && temp < 0.000000001) ||
+    (temp < 0 && temp > -0.000000001)
+  ) {
     temp = temp.toExponential(4);
   } else if (("" + temp).length > 10) {
     temp = ("" + temp).substring(0, 10);
@@ -177,49 +196,55 @@ function equal() {
 function signs() {
   if (screen.innerHTML !== "0") {
     if (screen.innerHTML < 0) {
-      result = result.substring(
-        0,
-        result.length - screen.innerHTML.length - 2
-      );
+      result = result.substring(0, result.length - screen.innerHTML.length - 2);
       screen.innerHTML *= -1;
       result += " " + screen.innerHTML;
     } else {
-      result = result.substring(
-        0,
-        result.length - screen.innerHTML.length
-      );
+      result = result.substring(0, result.length - screen.innerHTML.length);
       screen.innerHTML *= -1;
       result += " (" + screen.innerHTML + ")";
     }
   }
 }
 
-function checkOverflow() {
-  let totLength = screen2.innerHTML.replace(/\s+/g, '').length;
-  if (totLength > 19) {
+function checkOverflow(isOver) {
+  let totLength = screen2.innerHTML.replace(/\s+/g, "").length;
+  if (overflow(screen2)) {
     if (totLength <= 38) {
-      screen2.style.paddingTop = '70px';
-      screen.style.marginBottom = '470px';
+      screen2.style.paddingTop = "70px";
+      screen.style.marginBottom = "470px";
     } else if (totLength > 38 && totLength < 38 + 19) {
-      screen2.style.paddingTop = '50px';
-      screen.style.marginBottom = '450px';
+      screen2.style.paddingTop = "50px";
+      screen.style.marginBottom = "450px";
     } else if (totLength >= 38 + 19 && totLength < 76) {
-      screen2.style.paddingTop = '30px';
-      screen.style.marginBottom = '430px';
+      screen2.style.paddingTop = "30px";
+      screen.style.marginBottom = "430px";
     } else {
-      screen2.style.paddingTop = '90px';
-      screen.style.marginBottom = '500px';
+      screen2.style.paddingTop = "90px";
+      screen.style.marginBottom = "500px";
       screen2.innerHTML = "";
       result = "";
       screen.innerHTML = "0";
     }
   } else {
-    screen2.style.paddingTop = '90px';
-    screen.style.marginBottom = '500px';
+    screen2.style.paddingTop = "90px";
+    screen.style.marginBottom = "500px";
   }
 }
 
-//throw error, colored background, add button highlights for keyboard
+function overflow(el) {
+  var curOverflow = el.style.overflow;
+
+  if (!curOverflow || curOverflow === "visible") el.style.overflow = "hidden";
+
+  var isOverflowing =
+    el.clientWidth < el.scrollWidth || el.clientHeight < el.scrollHeight;
+
+  el.style.overflow = curOverflow;
+
+  return isOverflowing;
+}
+//throw error, fix typing after calculation, fix infinity
 createMainGrid();
 generateMouse();
 generateKeys();
